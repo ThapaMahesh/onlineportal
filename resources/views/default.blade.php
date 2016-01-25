@@ -7,10 +7,11 @@
 	<meta name="author" content="Isna Nur Azis">
 	<meta name="keyword" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{$title}}</title>
+    <title>{{ (isset($title))?$title:"404 Not Found"}}</title>
  
     <!-- start: Css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/bootstrap-tagsinput.css') }}">
 
       <!-- plugins -->
       <link rel="stylesheet" type="text/css" href="{{ asset('asset/css/plugins/font-awesome.min.css') }}"/>
@@ -41,16 +42,18 @@
                 <span class="middle"></span>
                 <span class="bottom"></span>
               </div> -->
-                <a href="index.html" class="navbar-brand"> 
+                <a href="{{url('/profile')}}" class="navbar-brand"> 
                  <img style="height: 40px; margin: -8px;" src="{{ asset('asset/img/logo.png') }}">
                 </a>
 
               <ul class="nav navbar-nav navbar-right user-nav">
                 <li class="user-name"><span>{{$auth->username}}</span></li>
                   <li class="dropdown avatar-dropdown">
-                   <img src="{{ $auth->profile->image }}" class="img-circle avatar" alt="user name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"/>
+                   <img src="{{ $auth->profile->imgloc($auth->profile->id) }}" class="img-circle avatar" alt="user name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"/>
                    <ul class="dropdown-menu user-dropdown">
+                    @if($auth->role->permission != 25)
                      <li><a href="{{ url('profile') }}"><span class="fa fa-user"></span> My Profile</a></li>
+                     @endif
                      <li><a href="{{ url('profile/setting') }}"><span class="fa fa-cogs"></span> Setting</a></li>
                      <li><a href="{{ url('auth/logout') }}"><span class="fa fa-power-off"></span> Logout</a></li>
                      

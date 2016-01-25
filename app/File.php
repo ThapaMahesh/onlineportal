@@ -33,11 +33,11 @@ class File extends Model
     ];
 
 
-    public function users(){
+    public function user(){
         return $this->belongsTo('App\User');
     }
 
-    public function courses(){
+    public function course(){
         return $this->belongsTo('App\Course');
     }
 

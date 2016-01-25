@@ -2,164 +2,109 @@
 @section('content')
 <!-- start: Content -->
           <div id="content" class="search-v1">
+          @if(session('error'))
+            <p class="alert alert-danger">{{session('error')}}</p>
+          @endif
             <div class="panel">
               <div class="panel-body">
-                <div class="col-md-12">
+                <div class="col-md-10">
                      <!-- <div class="input-group"> -->
                       <!-- <input type="text" class="form-control" aria-label="..."> -->
                       <!-- <div class="input-group-btn"> -->
-                        
+                      {{Form::open(['url'=>'forum/index', 'method'=>'get'])}}
                       <div class="form-group">
-                        <select class="select2-A" multiple="multiple">
-                          <optgroup label="Alaskan/Hawaiian Time Zone">
-                            <option value="AK">Alaska</option>
-                            <option value="HI">Hawaii</option>
-                          </optgroup>
-                          <optgroup label="Pacific Time Zone">
-                            <option value="CA">California</option>
-                            <option value="NV">Nevada</option>
-                            <option value="OR">Oregon</option>
-                            <option value="WA">Washington</option>
-                          </optgroup>
-                          <optgroup label="Mountain Time Zone">
-                            <option value="AZ">Arizona</option>
-                            <option value="CO">Colorado</option>
-                            <option value="ID">Idaho</option>
-                            <option value="MT">Montana</option>
-                            <option value="NE">Nebraska</option>
-                            <option value="NM">New Mexico</option>
-                            <option value="ND">North Dakota</option>
-                            <option value="UT">Utah</option>
-                            <option value="WY">Wyoming</option>
-                          </optgroup>
-                          <optgroup label="Central Time Zone">
-                            <option value="AL">Alabama</option>
-                            <option value="AR">Arkansas</option>
-                            <option value="IL">Illinois</option>
-                            <option value="IA">Iowa</option>
-                            <option value="KS">Kansas</option>
-                            <option value="KY">Kentucky</option>
-                            <option value="LA">Louisiana</option>
-                            <option value="MN">Minnesota</option>
-                            <option value="MS">Mississippi</option>
-                            <option value="MO">Missouri</option>
-                            <option value="OK">Oklahoma</option>
-                            <option value="SD">South Dakota</option>
-                            <option value="TX">Texas</option>
-                            <option value="TN">Tennessee</option>
-                            <option value="WI">Wisconsin</option>
-                          </optgroup>
-                          <optgroup label="Eastern Time Zone">
-                            <option value="CT">Connecticut</option>
-                            <option value="DE">Delaware</option>
-                            <option value="FL">Florida</option>
-                            <option value="GA">Georgia</option>
-                            <option value="IN">Indiana</option>
-                            <option value="ME">Maine</option>
-                            <option value="MD">Maryland</option>
-                            <option value="MA">Massachusetts</option>
-                            <option value="MI">Michigan</option>
-                            <option value="NH">New Hampshire</option>
-                            <option value="NJ">New Jersey</option>
-                            <option value="NY">New York</option>
-                            <option value="NC">North Carolina</option>
-                            <option value="OH">Ohio</option>
-                            <option value="PA">Pennsylvania</option>
-                            <option value="RI">Rhode Island</option>
-                            <option value="SC">South Carolina</option>
-                            <option value="VT">Vermont</option>
-                            <option value="VA">Virginia</option>
-                            <option value="WV">West Virginia</option>
-                          </optgroup>
+                        <input type="text" name="q" value="{{$query}}" class="col-sm-4">&nbsp;&nbsp;
+                        <select class="select2-A col-sm-4" name="tags[]" multiple="multiple">
+                          @foreach($tags as $eachtag)
+                            <?php $selected = ""; ?>
+                            @if(in_array($eachtag, $inputTags))
+                              <?php $selected = "selected"; ?>
+                            @endif
+                            <option {{$selected}} value="{{$eachtag}}">{{$eachtag}}</option>
+                          @endforeach
                         </select>
+                        <input type="submit" value="Submit" name="submit" class="btn btn-primary">
                         </div>
+                        {{Form::close()}}
                       <!-- </div> --><!-- /btn-group -->
                     <!-- </div> --><!-- /input-group -->
                 </div>
-                 
+                 <div class="col-md-2">
+                   <span class="icon-question icons icon text-right"></span> <a href="javascript:void(0)" id="add-question-modal" data-toggle="modal" data-target="#questionmodal">Ask New Question</a>
+                 </div>
               </div>
             </div>
             <div class="col-md-12">
                <div class="col-md-12 tabs-area box-shadow-none">
                   <div id="tabsDemo6Content" class="tab-content tab-content-v6 col-md-12">
                     <div role="tabpanel" class="tab-pane search-v1-menu1 fade active in" id="tabs-demo7-area1" aria-labelledby="tabs-demo7-area1">
-                      <h4> 2.281.291 results found for: “Miminium Project”</h4></br></br>
+                      <h4> {{count($forum)}} results found</h4></br></br>
                       <div class="col-md-9 padding-0">
+                          @foreach($forum as $eachforum)
                           <div class="media">
-                            <div class="media-left">29K <small>like</small></div>
+                            <div class="media-left" style="min-width:85px;">
+                              <img style="width:50px; border-radius:100% " src="{{$eachforum->user->profile->imgloc($eachforum->user->profile->id)}}"> 
+                              <small style="font-size:55%">{{$eachforum->user->username}}</small>
+                              </div>
                             <div class="media-body">
-                              <a class="media-heading">desktop publishing software like Aldus </a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">Technologies</span>
-                               <span class="label label-default">News</span>
-                               <span class="label label-default">Food</span>
-
+                              <a href="{{url('/forum/reply/'.$eachforum->id)}}" class="media-heading">{{$eachforum->question}}</a>
+                               <p>{{$eachforum->description}}</p>
+                               <?php $questiontags = explode(', ', $eachforum->tags); ?>
+                               @foreach($questiontags as $eachtag)
+                                <span class="label label-default">{{$eachtag}}</span>
+                               @endforeach
                             </div>
                           </div>
-                          <div class="media">
-                            <div class="media-left">74K <small>like</small></div>
-                            <div class="media-body">
-                              <a class="media-heading">PageMaker including versions </a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">Future</span>
-                               <span class="label label-default">Gadget</span>
-                            </div>
-                          </div>
-                          <div class="media">
-                            <div class="media-left">82K <small>like</small></div>
-                            <div class="media-body">
-                              <a class="media-heading">PageMaker including versions</a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">Technologies</span>
-                               <span class="label label-default">Jobs</span>
-                               <span class="label label-default">Food</span>
-                            </div>
-                          </div>
-                          <div class="media">
-                            <div class="media-left">05K <small>like</small></div>
-                            <div class="media-body">
-                              <a class="media-heading">and more recently with desktop</a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">Technologies</span>
-                               <span class="label label-default">Idea</span>
-                               <span class="label label-default">Food</span>
-                            </div>
-                          </div>
-                           <div class="media">
-                            <div class="media-left">84K <small>like</small></div>
-                            <div class="media-body">
-                              <a class="media-heading">containing Lorem Ipsum passages</a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">Book</span>
-                               <span class="label label-default">News</span>
-                               <span class="label label-default">Food</span>
-                            </div>
-                          </div>
-                          <div class="media">
-                            <div class="media-left">100 <small>like</small></div>
-                            <div class="media-body">
-                              <a class="media-heading">It was popularised in the 1960s</a>
-                               <p>It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
-                               <span class="label label-default">I-life</span>
-                               <span class="label label-default">News</span>
-                               <span class="label label-default">Food</span>
-                            </div>
-                          </div>
+                          @endforeach
                       </div>
                     </div>
                   </div>
-
                 </div>
+                {!! $forum->links() !!}
             </div>
           </div>
           <!-- end: content -->
+
+          <!-- modal starts -->
+          <div class="modal fade" id="questionmodal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+              {{ Form::open(['url'=>'forum/ask', 'class'=>'question-form']) }}
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Ask</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Question</label>
+                    <div class="col-sm-10"><input type="text" name="question" class="form-control"></div>
+                  </div><br />
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Description</label>
+                    <div class="col-sm-10"><textarea name="description" class="form-control"></textarea></div>
+                  </div><br />
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Tags</label>
+                    <div class="col-sm-10"><input type="text" data-role="tagsinput" name="tags" multiple class="form-control"></div>
+                  </div><br />
+                <div class="modal-footer">
+                  <input type="hidden" name="key" id="key_value">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" class="save-btn btn btn-primary">Save changes</button>
+                </div>
+                {{ Form::close() }}
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
 @stop
 
 @section('js')
+<script src="{{ asset('asset/js/bootstrap-tagsinput.js') }}"></script>
 <script type="text/javascript">
 $(".select2-A").select2({
       placeholder: "Select Tags",
       allowClear: true
     });
+
+$('.save-btn').click(function(){
+  $('.question-form').submit();
+});
 </script>
 @stop

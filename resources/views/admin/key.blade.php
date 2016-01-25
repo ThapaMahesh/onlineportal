@@ -3,6 +3,9 @@
 @section('content')
 <!-- start: Content -->
             <div id="content">
+            @if(session('message'))
+            <p class="alert alert-success">{{session('message')}}</p>
+            @endif
                <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
                     <div class="col-md-10">
@@ -33,6 +36,7 @@
                             <th>Key</th>
                             <th>Status</th>
                             <th>Type</th>
+                            <th>Remove</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -42,6 +46,7 @@
                             <td>{{ $eachkey->key }}</td>
                             <td>{{ ($eachkey->status == 0)?'Not Used':'Used' }}</td>
                             <td>{{ ($eachkey->type == 1)?'Teacher Key':'Student Key' }}</td>
+                            <td><a href="{{url('admin/removekey/'.$eachkey->id)}}"><span class="fa fa-remove icons icon text-right" style="color:red;" data-toggle="tooltip" data-placement="left" title="Remove"></span></a></td>
                           </tr>
                         @endforeach
                           

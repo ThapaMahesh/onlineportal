@@ -24,7 +24,7 @@
                       </a>
                     </li>
                     <li class="ripple">
-                      <a href="{{ url('admin/key') }}" class="nav-header"><span class="fa fa-table"></span> Add Key  
+                      <a href="{{ url('admin/key') }}" class="nav-header"><span class="fa fa-table"></span> Keys  
                         <span class="fa-angle-right fa right-arrow text-right"></span>
                       </a>
                     </li>

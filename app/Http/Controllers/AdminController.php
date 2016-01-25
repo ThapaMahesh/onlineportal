@@ -124,12 +124,12 @@ class AdminController extends Controller
 
     public function getKeygenerate(){
         $date = date('Y-m-d H:i:s');
-        $key = substr(bcrypt($date), 6, 6);
+        $key = substr(bcrypt($date), 8, 8);
 
         $keys = Key::where('key', $key)->first();
         while ($keys) {
             $date = date('Y-m-d H:i:s');
-            $key = substr(bcrypt($date), 6, 6);
+            $key = substr(bcrypt($date), 8, 8);
 
             $keys = Key::where('key', $key)->first();
         }
@@ -143,7 +143,7 @@ class AdminController extends Controller
     	$faculty->name = $request->input('name');
     	$faculty->save();
 
-    	return redirect('admin/faculty');
+    	return redirect('admin/faculty')->with(['message'=>'New Faculty Added', 'type'=>'valid']);
     }
 
     public function postAddcourse(Request $request){
@@ -154,7 +154,7 @@ class AdminController extends Controller
         $course->course_code = $request->input('course_code');
     	$course->save();
 
-    	return redirect('admin/faculty');
+    	return redirect('admin/faculty')->with(['message'=>'New Faculty Course Added', 'type'=>'valid']);
     }
 
 
@@ -185,7 +185,13 @@ class AdminController extends Controller
     	$key->status = 0;
     	$key->save();
 
-    	return redirect('admin/key');
+    	return redirect('admin/key')->with(['message'=>'Key Added Successfully!!']);
+    }
+
+    public function getRemovekey($id){
+        $key = Key::find($id);
+        $key->delete();
+        return redirect('admin/key')->with(['message'=>'Key Removed Successfully!!']);
     }
 
 }

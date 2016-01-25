@@ -33,12 +33,25 @@ class Forum extends Model
     ];
 
 
-    public function users(){
+    public function user(){
         return $this->belongsTo('App\User');
     }
 
     public function replies(){
         return $this->hasMany('App\Reply');
+    }
+
+    public function tags(){
+        $forums = Forum::get();
+        $tags = $forums->lists('tags')->toArray();
+        $alltags = [];
+        foreach ($tags as $eachtag) {
+            if($eachtag != ""){
+                $tagArray = explode(', ', $eachtag);
+            }
+            $alltags = array_merge($alltags, $tagArray);
+        }
+        return array_unique($alltags);
     }
 
 }

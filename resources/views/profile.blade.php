@@ -1,6 +1,9 @@
 @extends('default')
 @section('content')
 <div id="content" style="margin-top:75px !important;" class="col-md-12 col-sm-12 profile-v1-body">
+@if(session('message'))
+  <p class="alert alert-success">{{session('message')}}</p>
+@endif
                 <div class="col-md-4">
                    <!-- <div class="box-v5 panel">
                     <div class="panel-heading padding-0 bg-white border-none">
@@ -27,9 +30,9 @@
                   </div> -->
                     <div class="panel box-v7">
                         <div class="panel-body">
-                          <img style="width:100%; height:auto;" src="{{$profile->image}}"/>
+                          <img style="width:100%; height:auto;" src="{{$profile->imgloc($profile->id)}}"/>
                           <h2>
-                            <span class="icon-{{($profile->gender == 'Male')?'symbol-male':'symble-female'}} icons" style="font-size:0.5em;"></span>
+                            <span class="icon-{{($profile->gender == 'Male')?'symbol-male':($profile->gender == 'Female')?'symble-female':''}} icons" style="font-size:0.5em;"></span>
                             {{$profile->name}}
                           </h2>
                         </div>
@@ -105,6 +108,40 @@
                                   </div>
                                   </div>
 
+                                  @if($auth->role->permission == 5)
+                                  <div class="row profile-media">
+                                   <div class="col-md-6">
+                                    <div class="media-left">
+                                        <span class="icon-calendar icons" style="font-size:2em;"></span>
+                                    </div>
+                                    <div class="media-body">
+                                      <h5 class="media-heading">Faculty</h5>
+                                      <p>{{$profile->faculty->name}}</p>
+                                        <!-- <div class="progress progress-mini">
+                                          <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
+                                            <span class="sr-only">60% Complete</span>
+                                          </div>
+                                        </div> -->
+                                    </div>
+                                  </div>
+                                  
+                                    <div class="col-md-6">
+                                      <div class="media-left">
+                                          <span class="icon-book-open icons" style="font-size:2em;"></span>
+                                      </div>
+                                      <div class="media-body">
+                                        <h5 class="media-heading">Semester/Year</h5>
+                                        <p>{{$profile->semester}}</p>
+                                          <!-- <div class="progress progress-mini">
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
+                                              <span class="sr-only">60% Complete</span>
+                                            </div>
+                                          </div> -->
+                                      </div>
+                                    </div>
+                                    </div>
+                                    @endif
+
                                   <div class="row profile-media">
                                    <div class="col-md-6">
                                     <div class="media-left">
@@ -120,27 +157,33 @@
                                         </div> -->
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
-                                    <div class="media-left">
-                                        <span class="icon-book-open icons" style="font-size:2em;"></span>
+                                  @if($auth->role->permission == 15)
+                                    <div class="col-md-6">
+                                      <div class="media-left">
+                                          <span class="icon-book-open icons" style="font-size:2em;"></span>
+                                      </div>
+                                      <div class="media-body">
+                                        <h5 class="media-heading">Teaching Courses</h5>
+                                        @foreach($profile->courseprofiles as $eachcourse)
+                                        <p>{{$eachcourse->course->faculty->name.': '.$eachcourse->course->name.' '.$eachcourse->course->course_code}}</p>
+                                          <!-- <div class="progress progress-mini">
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
+                                              <span class="sr-only">60% Complete</span>
+                                            </div>
+                                          </div> -->
+                                          @endforeach
+                                      </div>
                                     </div>
-                                    <div class="media-body">
-                                      <h5 class="media-heading">Semester/Year</h5>
-                                      <p>{{$profile->semester}}</p>
-                                        <!-- <div class="progress progress-mini">
-                                          <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">
-                                            <span class="sr-only">60% Complete</span>
-                                          </div>
-                                        </div> -->
+                                    @endif
                                     </div>
-                                  </div>
-                                  </div>
                                 </div>
+                                @if($auth->role->permission != 25)
                                 <div class="panel-footer bg-white border-none">
                                     <center>
                                       <a href="{{url('profile/edit')}}"><input type="button" value="Edit" class="btn btn-danger box-shadow-none"/></a>
                                     </center>
                                 </div>
+                                @endif
                               </div>
                 </div>
                 </div>

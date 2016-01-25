@@ -32,11 +32,11 @@ class Reply extends Model
         'forum_id', 'reply', 'user_id', 'solution'
     ];
 
-    public function users(){
+    public function user(){
         return $this->belongsTo('App\User');
     }
 
-    public function forums(){
+    public function forum(){
         return $this->belongsTo('App\Forum');
     }
 

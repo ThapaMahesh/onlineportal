@@ -3,491 +3,87 @@
 @section('content')
 <!-- start: Content -->
             <div id="content">
+              @if(session('error'))
+                <p class="alert alert-danger">{{session('error')}}</p>
+              @elseif(session('message'))
+                <p class="alert alert-success">{{session('message')}}</p>
+              @endif
                <div class="panel box-shadow-none content-header">
                   <div class="panel-body">
-                    <div class="col-md-12">
-                        <h3 class="animated fadeInLeft">Data Tables</h3>
+                    <div class="col-md-10">
+                        <h3 class="animated fadeInLeft">Course Files</h3>
+                        {{Form::open(['url'=>'file/index', 'method'=>'get', 'class'=>'course_file'])}}
                         <p class="animated fadeInDown">
-                          Table <span class="fa-angle-right fa"></span> Data Tables
+                          @if($auth->role->permission == 5)
+                          <select class="select_course" name="course">
+                            @foreach($faculty as $eachcourse)
+                            <?php $selected = ""; ?>
+                            @if($course_id == $eachcourse->id)
+                              <?php $selected = 'selected'; ?>
+                            @endif
+                            <option {{$selected}} value="{{$eachcourse->id}}">{{$eachcourse->name.' '.$eachcourse->course_code}}</option>
+                            @endforeach
+                          </select>
+                          @else
+                          <select class="select_course" name="course">
+                            @foreach($faculty as $eachcourseprofile)
+                            <?php $selected = ""; ?>
+                            @if($course_id == $eachcourseprofile->course_id)
+                              <?php $selected = 'selected'; ?>
+                            @endif
+                            <option {{$selected}} value="{{$eachcourseprofile->course_id}}">{{$eachcourseprofile->course->name.' '.$eachcourseprofile->course->course_code}}</option>
+                            @endforeach
+                          </select>
+                          @endif
                         </p>
+                        {{Form::close()}}
+                        <!-- <span class="icon-user-follow icons icon text-right"></span> -->
+                    </div>
+                    <div class="col-md-2">
+                        <h3 class="animated fadeInLeft"></h3>
+                        @if($auth->role->permission == 15)
+                        <p class="animated fadeInDown">
+                          <span class="icon-notebook icons icon text-right"></span> <a href="javascript:void(0)" id="add_notes" data-toggle="modal" data-target="#filemodal">Add New File</a>
+                        </p>
+                        @endif
                     </div>
                   </div>
               </div>
               <div class="col-md-12 top-20 padding-0">
                 <div class="col-md-12">
                   <div class="panel">
-                    <div class="panel-heading"><h3>Data Tables</h3></div>
+                    <!-- <div class="panel-heading"><h3></h3></div> -->
                     <div class="panel-body">
                       <div class="responsive-table">
                       <table id="datatables-example" class="table table-striped table-bordered" width="100%" cellspacing="0">
                       <thead>
+                          <tr>
+                            <th>File Name</th>
+                            <th>Notes</th>
+                            <th>Download</th>
+                            <th>Uploaded By</th>
+                            @if($auth->role->permission == 15)
+                            <th>Remove</th>
+                            @endif
+                          </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($files as $eachfile)
                         <tr>
-                          <th>Name</th>
-                          <th>Position</th>
-                          <th>Office</th>
-                          <th>Age</th>
-                          <th>Start date</th>
-                          <th>Salary</th>
+                            <th>{{$eachfile->title}}</th>
+                            <th><span data-toggle="tooltip" data-placement="left" title="{{$eachfile->notes}}">{{ substr($eachfile->notes, 0, 20) }}{{ (strlen($eachfile->notes) >=20 )?"..":"" }}</span></th>
+                            <th><a href="{{url('/').'/file/download/'.$eachfile->id}}"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a></th>
+                            <th>{{($eachfile->user_id == $auth->id)?'Self':$eachfile->user->profile->name}}</th>
+                            @if($auth->role->permission == 15)
+                            @if($eachfile->user_id == $auth->id)
+                            <th><a href="{{url('file/delete/'.$eachfile->id)}}"><span class="fa fa-remove icons icon text-right" style="color:red;" data-toggle="tooltip" data-placement="left" title="Remove"></span></a></th>
+                            @else
+                            <th>&nbsp;</th>
+                            @endif
+                            @endif
                         </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Tiger Nixon</td>
-                          <td>System Architect</td>
-                          <td>Edinburgh</td>
-                          <td>61</td>
-                          <td>2011/04/25</td>
-                          <td>$320,800</td>
-                        </tr>
-                        <tr>
-                          <td>Garrett Winters</td>
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>63</td>
-                          <td>2011/07/25</td>
-                          <td>$170,750</td>
-                        </tr>
-                        <tr>
-                          <td>Ashton Cox</td>
-                          <td>Junior Technical Author</td>
-                          <td>San Francisco</td>
-                          <td>66</td>
-                          <td>2009/01/12</td>
-                          <td>$86,000</td>
-                        </tr>
-                        <tr>
-                          <td>Cedric Kelly</td>
-                          <td>Senior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2012/03/29</td>
-                          <td>$433,060</td>
-                        </tr>
-                        <tr>
-                          <td>Airi Satou</td>
-                          <td>Accountant</td>
-                          <td>Tokyo</td>
-                          <td>33</td>
-                          <td>2008/11/28</td>
-                          <td>$162,700</td>
-                        </tr>
-                        <tr>
-                          <td>Brielle Williamson</td>
-                          <td>Integration Specialist</td>
-                          <td>New York</td>
-                          <td>61</td>
-                          <td>2012/12/02</td>
-                          <td>$372,000</td>
-                        </tr>
-                        <tr>
-                          <td>Herrod Chandler</td>
-                          <td>Sales Assistant</td>
-                          <td>San Francisco</td>
-                          <td>59</td>
-                          <td>2012/08/06</td>
-                          <td>$137,500</td>
-                        </tr>
-                        <tr>
-                          <td>Rhona Davidson</td>
-                          <td>Integration Specialist</td>
-                          <td>Tokyo</td>
-                          <td>55</td>
-                          <td>2010/10/14</td>
-                          <td>$327,900</td>
-                        </tr>
-                        <tr>
-                          <td>Colleen Hurst</td>
-                          <td>Javascript Developer</td>
-                          <td>San Francisco</td>
-                          <td>39</td>
-                          <td>2009/09/15</td>
-                          <td>$205,500</td>
-                        </tr>
-                        <tr>
-                          <td>Sonya Frost</td>
-                          <td>Software Engineer</td>
-                          <td>Edinburgh</td>
-                          <td>23</td>
-                          <td>2008/12/13</td>
-                          <td>$103,600</td>
-                        </tr>
-                        <tr>
-                          <td>Jena Gaines</td>
-                          <td>Office Manager</td>
-                          <td>London</td>
-                          <td>30</td>
-                          <td>2008/12/19</td>
-                          <td>$90,560</td>
-                        </tr>
-                        <tr>
-                          <td>Quinn Flynn</td>
-                          <td>Support Lead</td>
-                          <td>Edinburgh</td>
-                          <td>22</td>
-                          <td>2013/03/03</td>
-                          <td>$342,000</td>
-                        </tr>
-                        <tr>
-                          <td>Charde Marshall</td>
-                          <td>Regional Director</td>
-                          <td>San Francisco</td>
-                          <td>36</td>
-                          <td>2008/10/16</td>
-                          <td>$470,600</td>
-                        </tr>
-                        <tr>
-                          <td>Haley Kennedy</td>
-                          <td>Senior Marketing Designer</td>
-                          <td>London</td>
-                          <td>43</td>
-                          <td>2012/12/18</td>
-                          <td>$313,500</td>
-                        </tr>
-                        <tr>
-                          <td>Tatyana Fitzpatrick</td>
-                          <td>Regional Director</td>
-                          <td>London</td>
-                          <td>19</td>
-                          <td>2010/03/17</td>
-                          <td>$385,750</td>
-                        </tr>
-                        <tr>
-                          <td>Michael Silva</td>
-                          <td>Marketing Designer</td>
-                          <td>London</td>
-                          <td>66</td>
-                          <td>2012/11/27</td>
-                          <td>$198,500</td>
-                        </tr>
-                        <tr>
-                          <td>Paul Byrd</td>
-                          <td>Chief Financial Officer (CFO)</td>
-                          <td>New York</td>
-                          <td>64</td>
-                          <td>2010/06/09</td>
-                          <td>$725,000</td>
-                        </tr>
-                        <tr>
-                          <td>Gloria Little</td>
-                          <td>Systems Administrator</td>
-                          <td>New York</td>
-                          <td>59</td>
-                          <td>2009/04/10</td>
-                          <td>$237,500</td>
-                        </tr>
-                        <tr>
-                          <td>Bradley Greer</td>
-                          <td>Software Engineer</td>
-                          <td>London</td>
-                          <td>41</td>
-                          <td>2012/10/13</td>
-                          <td>$132,000</td>
-                        </tr>
-                        <tr>
-                          <td>Dai Rios</td>
-                          <td>Personnel Lead</td>
-                          <td>Edinburgh</td>
-                          <td>35</td>
-                          <td>2012/09/26</td>
-                          <td>$217,500</td>
-                        </tr>
-                        <tr>
-                          <td>Jenette Caldwell</td>
-                          <td>Development Lead</td>
-                          <td>New York</td>
-                          <td>30</td>
-                          <td>2011/09/03</td>
-                          <td>$345,000</td>
-                        </tr>
-                        <tr>
-                          <td>Yuri Berry</td>
-                          <td>Chief Marketing Officer (CMO)</td>
-                          <td>New York</td>
-                          <td>40</td>
-                          <td>2009/06/25</td>
-                          <td>$675,000</td>
-                        </tr>
-                        <tr>
-                          <td>Caesar Vance</td>
-                          <td>Pre-Sales Support</td>
-                          <td>New York</td>
-                          <td>21</td>
-                          <td>2011/12/12</td>
-                          <td>$106,450</td>
-                        </tr>
-                        <tr>
-                          <td>Doris Wilder</td>
-                          <td>Sales Assistant</td>
-                          <td>Sidney</td>
-                          <td>23</td>
-                          <td>2010/09/20</td>
-                          <td>$85,600</td>
-                        </tr>
-                        <tr>
-                          <td>Angelica Ramos</td>
-                          <td>Chief Executive Officer (CEO)</td>
-                          <td>London</td>
-                          <td>47</td>
-                          <td>2009/10/09</td>
-                          <td>$1,200,000</td>
-                        </tr>
-                        <tr>
-                          <td>Gavin Joyce</td>
-                          <td>Developer</td>
-                          <td>Edinburgh</td>
-                          <td>42</td>
-                          <td>2010/12/22</td>
-                          <td>$92,575</td>
-                        </tr>
-                        <tr>
-                          <td>Jennifer Chang</td>
-                          <td>Regional Director</td>
-                          <td>Singapore</td>
-                          <td>28</td>
-                          <td>2010/11/14</td>
-                          <td>$357,650</td>
-                        </tr>
-                        <tr>
-                          <td>Brenden Wagner</td>
-                          <td>Software Engineer</td>
-                          <td>San Francisco</td>
-                          <td>28</td>
-                          <td>2011/06/07</td>
-                          <td>$206,850</td>
-                        </tr>
-                        <tr>
-                          <td>Fiona Green</td>
-                          <td>Chief Operating Officer (COO)</td>
-                          <td>San Francisco</td>
-                          <td>48</td>
-                          <td>2010/03/11</td>
-                          <td>$850,000</td>
-                        </tr>
-                        <tr>
-                          <td>Shou Itou</td>
-                          <td>Regional Marketing</td>
-                          <td>Tokyo</td>
-                          <td>20</td>
-                          <td>2011/08/14</td>
-                          <td>$163,000</td>
-                        </tr>
-                        <tr>
-                          <td>Michelle House</td>
-                          <td>Integration Specialist</td>
-                          <td>Sidney</td>
-                          <td>37</td>
-                          <td>2011/06/02</td>
-                          <td>$95,400</td>
-                        </tr>
-                        <tr>
-                          <td>Suki Burks</td>
-                          <td>Developer</td>
-                          <td>London</td>
-                          <td>53</td>
-                          <td>2009/10/22</td>
-                          <td>$114,500</td>
-                        </tr>
-                        <tr>
-                          <td>Prescott Bartlett</td>
-                          <td>Technical Author</td>
-                          <td>London</td>
-                          <td>27</td>
-                          <td>2011/05/07</td>
-                          <td>$145,000</td>
-                        </tr>
-                        <tr>
-                          <td>Gavin Cortez</td>
-                          <td>Team Leader</td>
-                          <td>San Francisco</td>
-                          <td>22</td>
-                          <td>2008/10/26</td>
-                          <td>$235,500</td>
-                        </tr>
-                        <tr>
-                          <td>Martena Mccray</td>
-                          <td>Post-Sales support</td>
-                          <td>Edinburgh</td>
-                          <td>46</td>
-                          <td>2011/03/09</td>
-                          <td>$324,050</td>
-                        </tr>
-                        <tr>
-                          <td>Unity Butler</td>
-                          <td>Marketing Designer</td>
-                          <td>San Francisco</td>
-                          <td>47</td>
-                          <td>2009/12/09</td>
-                          <td>$85,675</td>
-                        </tr>
-                        <tr>
-                          <td>Howard Hatfield</td>
-                          <td>Office Manager</td>
-                          <td>San Francisco</td>
-                          <td>51</td>
-                          <td>2008/12/16</td>
-                          <td>$164,500</td>
-                        </tr>
-                        <tr>
-                          <td>Hope Fuentes</td>
-                          <td>Secretary</td>
-                          <td>San Francisco</td>
-                          <td>41</td>
-                          <td>2010/02/12</td>
-                          <td>$109,850</td>
-                        </tr>
-                        <tr>
-                          <td>Vivian Harrell</td>
-                          <td>Financial Controller</td>
-                          <td>San Francisco</td>
-                          <td>62</td>
-                          <td>2009/02/14</td>
-                          <td>$452,500</td>
-                        </tr>
-                        <tr>
-                          <td>Timothy Mooney</td>
-                          <td>Office Manager</td>
-                          <td>London</td>
-                          <td>37</td>
-                          <td>2008/12/11</td>
-                          <td>$136,200</td>
-                        </tr>
-                        <tr>
-                          <td>Jackson Bradshaw</td>
-                          <td>Director</td>
-                          <td>New York</td>
-                          <td>65</td>
-                          <td>2008/09/26</td>
-                          <td>$645,750</td>
-                        </tr>
-                        <tr>
-                          <td>Olivia Liang</td>
-                          <td>Support Engineer</td>
-                          <td>Singapore</td>
-                          <td>64</td>
-                          <td>2011/02/03</td>
-                          <td>$234,500</td>
-                        </tr>
-                        <tr>
-                          <td>Bruno Nash</td>
-                          <td>Software Engineer</td>
-                          <td>London</td>
-                          <td>38</td>
-                          <td>2011/05/03</td>
-                          <td>$163,500</td>
-                        </tr>
-                        <tr>
-                          <td>Sakura Yamamoto</td>
-                          <td>Support Engineer</td>
-                          <td>Tokyo</td>
-                          <td>37</td>
-                          <td>2009/08/19</td>
-                          <td>$139,575</td>
-                        </tr>
-                        <tr>
-                          <td>Thor Walton</td>
-                          <td>Developer</td>
-                          <td>New York</td>
-                          <td>61</td>
-                          <td>2013/08/11</td>
-                          <td>$98,540</td>
-                        </tr>
-                        <tr>
-                          <td>Finn Camacho</td>
-                          <td>Support Engineer</td>
-                          <td>San Francisco</td>
-                          <td>47</td>
-                          <td>2009/07/07</td>
-                          <td>$87,500</td>
-                        </tr>
-                        <tr>
-                          <td>Serge Baldwin</td>
-                          <td>Data Coordinator</td>
-                          <td>Singapore</td>
-                          <td>64</td>
-                          <td>2012/04/09</td>
-                          <td>$138,575</td>
-                        </tr>
-                        <tr>
-                          <td>Zenaida Frank</td>
-                          <td>Software Engineer</td>
-                          <td>New York</td>
-                          <td>63</td>
-                          <td>2010/01/04</td>
-                          <td>$125,250</td>
-                        </tr>
-                        <tr>
-                          <td>Zorita Serrano</td>
-                          <td>Software Engineer</td>
-                          <td>San Francisco</td>
-                          <td>56</td>
-                          <td>2012/06/01</td>
-                          <td>$115,000</td>
-                        </tr>
-                        <tr>
-                          <td>Jennifer Acosta</td>
-                          <td>Junior Javascript Developer</td>
-                          <td>Edinburgh</td>
-                          <td>43</td>
-                          <td>2013/02/01</td>
-                          <td>$75,650</td>
-                        </tr>
-                        <tr>
-                          <td>Cara Stevens</td>
-                          <td>Sales Assistant</td>
-                          <td>New York</td>
-                          <td>46</td>
-                          <td>2011/12/06</td>
-                          <td>$145,600</td>
-                        </tr>
-                        <tr>
-                          <td>Hermione Butler</td>
-                          <td>Regional Director</td>
-                          <td>London</td>
-                          <td>47</td>
-                          <td>2011/03/21</td>
-                          <td>$356,250</td>
-                        </tr>
-                        <tr>
-                          <td>Lael Greer</td>
-                          <td>Systems Administrator</td>
-                          <td>London</td>
-                          <td>21</td>
-                          <td>2009/02/27</td>
-                          <td>$103,500</td>
-                        </tr>
-                        <tr>
-                          <td>Jonas Alexander</td>
-                          <td>Developer</td>
-                          <td>San Francisco</td>
-                          <td>30</td>
-                          <td>2010/07/14</td>
-                          <td>$86,500</td>
-                        </tr>
-                        <tr>
-                          <td>Shad Decker</td>
-                          <td>Regional Director</td>
-                          <td>Edinburgh</td>
-                          <td>51</td>
-                          <td>2008/11/13</td>
-                          <td>$183,000</td>
-                        </tr>
-                        <tr>
-                          <td>Michael Bruce</td>
-                          <td>Javascript Developer</td>
-                          <td>Singapore</td>
-                          <td>29</td>
-                          <td>2011/06/27</td>
-                          <td>$183,000</td>
-                        </tr>
-                        <tr>
-                          <td>Donna Snider</td>
-                          <td>Customer Support</td>
-                          <td>New York</td>
-                          <td>27</td>
-                          <td>2011/01/25</td>
-                          <td>$112,000</td>
-                        </tr>
-                      </tbody>
+                        @endforeach
+                        </tbody>
                         </table>
                       </div>
                   </div>
@@ -496,4 +92,59 @@
               </div>
             </div>
           <!-- end: content -->
+
+          @if($auth->role->permission == 15)
+          <!-- modal starts -->
+          <div class="modal fade" id="filemodal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+              {{ Form::open(['url'=>'file/create', 'files'=>true]) }}
+              <input type="hidden" name="user_id" value="{{$auth->id}}">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">Add new file</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">File*</label>
+                    <div class="col-sm-10"><input type="file" name="file" class="form-control"></div>
+                  </div><br />
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Title*</label>
+                    <div class="col-sm-10"><input type="text" name="title" class="form-control"></div>
+                  </div><br />
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Course*</label>
+                    <div class="col-sm-10">
+                      <select name="course" class="form-control">
+                        @foreach($faculty as $eachfaculty)
+                          <option value="{{$eachfaculty->course_id}}">{{$eachfaculty->course->faculty->name.': '.$eachfaculty->course->name.' '.$eachfaculty->course->course_code}}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </div><br />
+                  <div class="form-group row"><label class="col-sm-2 control-label text-right">Important Notes</label>
+                    <div class="col-sm-10"><textarea name="notes" class="form-control"></textarea></div>
+                  </div><br />
+                </div>
+                <div class="modal-footer">
+                  <input type="hidden" name="key" id="key_value">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                {{ Form::close() }}
+              </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+          </div><!-- /.modal -->
+          @endif
+@stop
+
+@section('js')
+<script type="text/javascript">
+  $('#add-key-modal').click(function(){
+    $('#key').text('');
+    $('#key_value').val('');
+  });
+
+  $('.select_course').change(function(){
+    $('form.course_file').submit();
+  });
+</script>
 @stop

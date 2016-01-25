@@ -44,4 +44,18 @@ class Profile extends Model
         return $this->hasMany('App\CourseProfile');   
     }
 
+    public function imgloc($id){
+        $profile = Profile::find($id);
+        if($profile->image == ""){
+            if($profile->gender == 'Female'){
+                $path = url('/').'/asset/img/female.png';
+            }else{
+                $path = url('/').'/asset/img/male.png';
+            }
+        }else{
+            $path = url('/').'/asset/userimage/'.$profile->image;
+        }
+        return $path;
+    }
+
 }

@@ -30,7 +30,9 @@ trait RegistersUsers
             return view($this->registerView);
         }
 
-        return view('auth.register');
+        $faculty = \DB::table('faculties')->get();
+
+        return view('auth.register')->with(['faculty'=>$faculty]);
     }
 
     /**

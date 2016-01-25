@@ -3,18 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class CourseProfile extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     /**
      * The database softdelete field activate.
      *
      * @var string
+     *
+     *  protected $dates = ['deleted_at'];
      */
-    protected $dates = ['deleted_at'];
 
     /**
      * The database table used by the model.

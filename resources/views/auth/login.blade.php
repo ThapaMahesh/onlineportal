@@ -20,6 +20,11 @@
                       <!-- </ul> -->
                     </div>
                   @endif
+                  @if(session('message'))
+                    <div class="alert alert-{{session('type')}}">
+                        {{session('message')}}
+                    </div>
+                  @endif
                   <div class="form-group form-animate-text" style="margin-top:40px !important;">
                     <input type="text" name="username" value="{{ old('username') }}" class="form-text" required>
                     <span class="bar"></span>
@@ -37,7 +42,7 @@
               </div>
                 <div class="text-center" style="padding:5px;">
                     <!-- <a href="#">Forgot Password </a> -->
-                    <a href="{{ url('auth/signup') }}">Don't have an account?</a>
+                    <a href="{{ url('auth/register') }}">Don't have an account?</a>
                 </div>
           </div>
         {{ Form::close() }}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Profile;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -140,11 +141,16 @@ class AuthController extends Controller
         try{
             $keys = SecretKey::where('key', $request->input('your_key'))->where('status', 0)->first();
             if(!$keys){
-                return redirect('auth/register')->with(['error'=>'Invalid Key.']);
+                return redirect('auth/register')->with(['message'=>'Invalid Key.', 'type'=>'danger']);
             }
+            $faculty = 0;
             if($keys->type == 1){ //teacher
                 $role = 2;
             }else if($keys->type == 2){ //student
+                if($request->input('faculty') == 0){
+                    return redirect()->back()->withErrors(['faculty'=>'Students must select their faculty.']);
+                }
+                $faculty = $request->input('faculty');
                 $role = 3;
             }
 
@@ -155,18 +161,26 @@ class AuthController extends Controller
             $user->role_id = $role;
             $user->clz_key = $request->input('your_key');
             $user->username = $request->input('username');
-            $user->password = bcrypt($request->input('password'));
+            $user->password = \Hash::make($request->input('password'));
             $user->active = 0;
 
             $user->save();
 
+            $profile = new Profile;
+
+            $profile->user_id = $user->id;
+            $profile->faculty_id = $faculty;
+            $profile->name = $request->input('name');
+            $profile->email = $request->input('email');
+            $profile->save();
+            return redirect('auth/register')->with(['message' => 'Success', 'type' => 'success']);
             return view('thankyou');
             
         }
         catch(\Exception $e)
         {
-            return redirect('auth/register')->with(['message' => 'Registration Failed. Try Again!', 'type' => 'danger']);
-            //return redirect('/')->with(['message' => $e->getMessage(), 'type' => 'danger']);
+            // return redirect('auth/register')->with(['message' => 'Registration Failed. Try Again!', 'type' => 'danger']);
+            return redirect('/')->with(['message' => $e->getMessage(), 'type' => 'danger']);
         }
     }
 }

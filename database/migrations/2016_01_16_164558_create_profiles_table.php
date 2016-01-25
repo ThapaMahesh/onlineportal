@@ -21,7 +21,7 @@ class CreateProfilesTable extends Migration
             $table->string('gender');
             $table->string('email');
             $table->string('phone');
-            $table->timestamp('dob');
+            $table->date('dob');
             $table->string('image');
             $table->string('year_joined');
             $table->string('semester');

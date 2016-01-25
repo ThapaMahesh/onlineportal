@@ -101,7 +101,7 @@
                             <td>{{$eachstudent->profile->name}}</td>
                             <td>{{$eachstudent->profile->phone}}</td>
                             <td>{{$eachstudent->profile->email}}</td>
-                            <td>{{$eachstudent->profile->faculty->name}}</td>
+                            <td>{{($eachstudent->profile->faculty)?$eachstudent->profile->faculty->name:""}}</td>
                             <td>{{$eachstudent->profile->semester}}</td>
                             <td>{{ ($eachstudent->active == 1)?'Active':'Disabled' }}</td>
                             <td>

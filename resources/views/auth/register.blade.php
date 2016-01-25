@@ -8,8 +8,16 @@
           <div class="panel periodic-login">
               <div class="panel-body text-center">
                   <h1 class="atomic-symbol"><img src="{{asset('asset/img/logo-icon.png')}}"></h1>
+                  @if (session('message'))
+                    <div class="alert alert-{{session('type')}}">
+                      <!-- <strong>Whoops!</strong> There were some problems with your input.<br><br> -->
+                      <!-- <ul> -->
+                          <p>{{ session('message') }}</p>
+                      <!-- </ul> -->
+                    </div>
+                  @endif
                   <div class="form-group form-animate-text" style="margin-top:40px !important;">
-                    <input type="text" name="name" class="form-text" required>
+                    <input type="text" name="name" value="{{old('name')}}" class="form-text" required>
                     <span class="bar"></span>
                     <label>Name</label>
                     @if($errors->has('name'))
@@ -17,7 +25,7 @@
                     @endif
                   </div>
                   <div class="form-group form-animate-text" style="margin-top:40px !important;">
-                    <input type="email" name="email" class="form-text" required>
+                    <input type="email" name="email" value="{{old('email')}}" class="form-text" required>
                     <span class="bar"></span>
                     <label>Email</label>
                     @if($errors->has('email'))
@@ -25,7 +33,7 @@
                     @endif
                   </div>
                   <div class="form-group form-animate-text" style="margin-top:40px !important;">
-                    <input type="text" name="username" class="form-text" required>
+                    <input type="text" name="username" value="{{old('username')}}" class="form-text" required>
                     <span class="bar"></span>
                     <label>Username</label>
                     @if($errors->has('username'))
@@ -49,6 +57,19 @@
                     @endif
                   </div>
                   <div class="form-group form-animate-text" style="margin-top:40px !important;">
+                    <p style="font-size:18px; float:left;">Faculty</p>
+                    <select name="faculty" class="form-control" required>
+                      <option value="0">Choose Faculty</option>
+                      @foreach($faculty as $eachfaculty)
+                      <option value="{{$eachfaculty->id}}">{{$eachfaculty->name}}</option>
+                      @endforeach
+                    </select>
+                    <p>*(Select only if Student)</p>
+                    @if($errors->has('faculty'))
+                    <p class="alert alert-danger">{{$errors->first('faculty')}}</p>
+                    @endif
+                  </div>
+                  <div class="form-group form-animate-text" style="margin-top:40px !important;">
                     <input type="text" name="your_key" class="form-text" required>
                     <span class="bar"></span>
                     <label>Your Key</label>
@@ -60,7 +81,7 @@
                   <input type="submit" class="btn col-md-12" value="SignUp"/>
               </div>
                 <div class="text-center" style="padding:5px;">
-                    <a href="{{ url('auth/signin') }}">Already have an account?</a>
+                    <a href="{{ url('auth/login') }}">Already have an account?</a>
                 </div>
           </div>
         {{ Form::close() }}
