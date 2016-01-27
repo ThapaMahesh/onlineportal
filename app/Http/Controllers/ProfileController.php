@@ -62,13 +62,17 @@ class ProfileController extends Controller{
 	}
 
 	public function getSetting(){
-		$img = Auth::user()->profile->image;
-        if($img == ""){
-            $img = asset('asset/img/avatar.jpg');
-        }else{
-            $img = asset('asset/userimage/'.Auth::user()->profile->image);
-        }
-        Auth::user()->profile->image = $img;
+		if(Auth::user()->role->permission == 25){
+			$img = url('/').'/asset/img/male.png';
+		}else{
+			$img = Auth::user()->profile->image;
+	        if($img == ""){
+	            $img = asset('asset/img/avatar.jpg');
+	        }else{
+	            $img = asset('asset/userimage/'.Auth::user()->profile->image);
+	        }
+	    }
+        // Auth::user()->profile->image = $img;
         view()->share('auth', Auth::user());
 		return view('password')->with([
 											'title'=>'Password',

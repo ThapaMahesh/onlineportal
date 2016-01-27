@@ -49,7 +49,11 @@
               <ul class="nav navbar-nav navbar-right user-nav">
                 <li class="user-name"><span>{{$auth->username}}</span></li>
                   <li class="dropdown avatar-dropdown">
+                  @if($auth->role->permission == 25)
+                  <img src="{{ url('/').'/asset/img/male.png' }}" class="img-circle avatar" alt="user name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"/>
+                  @else
                    <img src="{{ $auth->profile->imgloc($auth->profile->id) }}" class="img-circle avatar" alt="user name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"/>
+                   @endif
                    <ul class="dropdown-menu user-dropdown">
                     @if($auth->role->permission != 25)
                      <li><a href="{{ url('profile') }}"><span class="fa fa-user"></span> My Profile</a></li>
