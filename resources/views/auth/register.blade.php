@@ -7,7 +7,6 @@
         {{ Form::open(['url'=>'auth/register', 'class'=>'form-signin']) }}
           <div class="panel periodic-login">
               <div class="panel-body text-center">
-                  <h1 class="atomic-symbol"><img src="{{asset('asset/img/logo-icon.png')}}"></h1>
                   @if (session('message'))
                     <div class="alert alert-{{session('type')}}">
                       <!-- <strong>Whoops!</strong> There were some problems with your input.<br><br> -->

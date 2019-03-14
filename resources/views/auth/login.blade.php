@@ -9,7 +9,6 @@
         {{ Form::open(['url'=>'auth/login', 'class'=>'form-signin']) }}
           <div class="panel periodic-login">
               <div class="panel-body text-center">
-                  <h1 class="atomic-symbol"><img src="{{asset('asset/img/logo-icon.png')}}"></h1>
                   @if (isset($errors) && count($errors) > 0)
                     <div class="alert alert-danger">
                       <!-- <strong>Whoops!</strong> There were some problems with your input.<br><br> -->

@@ -24,7 +24,6 @@
 	<link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
 	<!-- end: Css -->
 
-	<link rel="shortcut icon" href="{{asset('asset/img/logo-icon.png')}}">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
@@ -43,7 +42,7 @@
                 <span class="bottom"></span>
               </div> -->
                 <a href="{{url('/profile')}}" class="navbar-brand"> 
-                 <img style="height: 40px; margin: -8px;" src="{{ asset('asset/img/logo.png') }}">
+                 Online Portal
                 </a>
 
               <ul class="nav navbar-nav navbar-right user-nav">
